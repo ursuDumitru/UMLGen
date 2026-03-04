@@ -5,22 +5,40 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Responsibilities:
- * - container for everything extracted
- * */
+/** Responsibilities: - container for everything extracted */
 public class UmlModel {
+    // Map = unique Key + Value entries
     private Map<String, UmlClass> classesByName = new HashMap<>();
-    private Set<Relation> relations = new HashSet<>();
+    // Set = List with unique entries
+    private Set<UmlRelation> classesRelations = new HashSet<>();
 
     public void addToClassesByName(String fqcn, UmlClass node) {
-        classesByName.put(fqcn, node);
+        this.classesByName.put(fqcn, node);
+    }
+
+    public Map<String, UmlClass> getClassesByName() {
+        return this.classesByName;
+    }
+
+    public Set<UmlRelation> getClassesRelations() {
+        return this.classesRelations;
+    }
+
+    public void setClassesRelations(Set<UmlRelation> classesRelations) {
+        this.classesRelations.addAll(classesRelations);
     }
 
     public void printClassesByName() {
-        System.out.println("[INFO] Classes by name:");
-        for (Map.Entry<String, UmlClass> entry : classesByName.entrySet()) {
-            System.out.println("[ " + entry.getKey() + ": " + entry.getValue().getFqcn() + " ]");
+        System.out.println("\n[INFO] Classes by name:");
+        for (UmlClass classByName : this.classesByName.values()) {
+            System.out.println(classByName);
+        }
+    }
+
+    public void printClassesRelations() {
+        System.out.println("\n[INFO] Classes Relations:");
+        for (UmlRelation relation : this.classesRelations) {
+            System.out.println(relation);
         }
     }
 }

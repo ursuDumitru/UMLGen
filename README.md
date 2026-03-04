@@ -37,8 +37,8 @@
 
 - extract info with Reflection API from compiled code
 - from CLI: the app needs a file_path(.jar, .dll, .exe)
-- (1) extract and print: classes, interfaces, methods, attributes, relations between classes/interfaces
-  - relations between classes/interfaces: inheritance, interface impl., association, dependency
+- (1) extract and print: classes, interfaces, methods, attributes, umlRelations between classes/interfaces
+  - umlRelations between classes/interfaces: inheritance, interface impl., association, dependency
   - association cardinality is ignored
 - for parameterized types include and the actual type(ex: List<Student> -> Student shows as a dependency)
 - (2) format the extracted information into yuml format.
@@ -534,3 +534,5 @@ public class ClassTrouble {
 - IllegalArgumentException When Attempting to Instantiate an Enum Type
 - IllegalArgumentException when Setting a Field with an Incompatible Enum Type
 - 
+
+[//]: # (NOTE: ALT + F12 to quick open terminal)

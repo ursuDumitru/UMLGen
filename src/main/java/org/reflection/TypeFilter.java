@@ -17,7 +17,7 @@ public class TypeFilter {
 
     TypeFilter() {}
 
-    public boolean includeClass(Class<?> cls, Config config) {
+    public boolean isClassOk(Class<?> cls, Config config) {
         if (cls == null) return false;
 
         String fqcn = cls.getName();
@@ -30,7 +30,7 @@ public class TypeFilter {
         return true;
     }
 
-    public boolean includeMethod(Method method, Config config) {
+    public boolean isMethodOk(Method method, Config config) {
         if (method == null) return false;
         if (config.isFqcnIgnored(method.getDeclaringClass().getName())) return false;
         if (method.isSynthetic()) return false; // // compiler generated method
@@ -39,8 +39,8 @@ public class TypeFilter {
         return true;
     }
 
-    public boolean includeField(Field field, Config config) {
-        if (field == null) return false;
+    public boolean isFieldOk(Field field, Config config) {
+        if (field == null) { return false;}
         if (config.isFqcnIgnored(field.getDeclaringClass().getName())) return false;
 
         return true;

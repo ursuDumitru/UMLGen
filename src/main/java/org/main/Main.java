@@ -5,11 +5,8 @@ import org.reflection.model.UmlModel;
 import org.uml.YumlRenderer;
 import org.uml.YumlWriter;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -26,14 +23,12 @@ public class Main {
         ReflectionAnalyzer analyzer = new ReflectionAnalyzer();
         UmlModel umlModel = analyzer.analyze(classNames, config);
 
-        umlModel.printClassesByName();
-//
-//        // 4. Convert extracted data to yUML
-//        YumlRenderer renderer = new YumlRenderer();
-//        List<String> yumlLines = renderer.render(umlModel, config);
-//
-//        // 5. Output result
-//        YumlWriter writer = new YumlWriter();
-//        writer.write(yumlLines);
+        // 4. Convert extracted data to yUML
+        YumlRenderer renderer = new YumlRenderer();
+        List<String> yumlLines = renderer.render(umlModel, config);
+
+        // 5. Output result
+        YumlWriter writer = new YumlWriter();
+        writer.outputInConsole(yumlLines);
     }
 }

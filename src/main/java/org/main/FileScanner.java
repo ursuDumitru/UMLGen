@@ -57,7 +57,7 @@ public class FileScanner {
     }
 
     private void printClassNames(List<String> classNames) {
-        System.out.println("[INFO] Classes found in artifact file:\n" + classNames);
+        System.out.println("\n[INFO] Classes found in artifact file:\n" + classNames);
     }
 
     public List<String> scan(Path artifactPath) throws IOException {
