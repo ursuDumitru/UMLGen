@@ -8,7 +8,7 @@ import java.util.*;
 /** Responsibility: convert UmlModel into yUML */
 public class YumlRenderer {
 
-    private NameFormatter nameFormatter = new NameFormatter();
+    private final NameFormatter nameFormatter = new NameFormatter();
 
     public List<String> render(UmlModel model, Config config) {
         Set<String> lines = new LinkedHashSet<>();
@@ -76,25 +76,6 @@ public class YumlRenderer {
         return "[" + className + "|" + fieldPart + "|" + methodPart + "]";
     }
 
-    private String renderMethodWithoutArgs(MethodInfo method, Config config) {
-        StringBuilder params = new StringBuilder();
-        StringJoiner joiner = new StringJoiner(",");
-        for (MethodInfo.ParamInfo param : method.getParams()) {
-            joiner.add(
-                    param.getParamName()
-                            + ":"
-                            + nameFormatter.formatType(param.getParamType(), config));
-        }
-        params.append(joiner);
-
-        //        return renderVisibility(method.getVisibility())
-        return method.getName()
-                + "("
-                + params
-                + "):"
-                + nameFormatter.formatType(method.getReturnType(), config);
-    }
-
     private String renderMethod(MethodInfo method, Config config) {
         return renderVisibility(method.getVisibility()) + " " + method.getName() + "()";
     }
@@ -103,7 +84,7 @@ public class YumlRenderer {
         return renderVisibility(field.getVisibility())
                 + " "
                 + field.getName()
-                + ":"
+                + ": "
                 + nameFormatter.formatType(field.getType(), config);
     }
 

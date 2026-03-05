@@ -8,8 +8,10 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 
 /**
- * ClassLoaderFactory Responsibilities: - Convert jar Path to URL - Build a URLClassLoader pointing
- * to that jar - Choose a parent loader
+ * ClassLoaderFactory Responsibilities:
+ * - Convert jar Path to URL
+ * - Build a URLClassLoader pointing to that jar
+ * - Choose a parent loader
  */
 public class ClassLoaderFactory {
     public ClassLoader create(Config config) throws MalformedURLException {

@@ -30,8 +30,9 @@ public class FileScanner {
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
 
-                if (entry.isDirectory())
+                if (entry.isDirectory()) {
                     continue;
+                }
 
                 if (!entry.getName().endsWith(".class"))
                     continue;

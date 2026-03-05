@@ -41,8 +41,8 @@ public class ReflectionAnalyzer {
                 this.relationExtractor.extractRelations(
                         includedClasses, config, this.typeConverter, this.typeFilter));
 
-        umlModel.printClassesByName();
-        umlModel.printClassesRelations();
+//        umlModel.printClassesByName();
+//        umlModel.printClassesRelations();
 
         return umlModel;
     }
@@ -68,6 +68,7 @@ public class ReflectionAnalyzer {
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (NoClassDefFoundError e) {
+                System.out.println("[WARNING] Class {" + fqcn + "} not found.");
             }
         }
         return loadedClasses;

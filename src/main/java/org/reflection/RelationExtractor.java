@@ -7,15 +7,18 @@ import org.reflection.model.UmlRelation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-// import static org.reflection.model.;
+import java.util.*;
 
 /** Responsibilities: - extracts relationships between classes/interfaces/enums etc. */
 public class RelationExtractor {
-    private Set<UmlRelation> relations = new HashSet<>();
+
+    private final Map<String, UmlRelation> relations = new HashMap<>();
+    private static final Map<RelationType, Integer> PRIORITY =
+            Map.of(
+                    RelationType.EXTENDS, 4,
+                    RelationType.IMPLEMENTS, 3,
+                    RelationType.ASSOCIATION, 2,
+                    RelationType.DEPENDENCY, 1);
 
     public Set<UmlRelation> extractRelations(
             List<Class<?>> includedClasses,
@@ -29,6 +32,7 @@ public class RelationExtractor {
             includedNames.add(cls.getName());
         }
 
+        this.relations.clear();
         for (Class<?> cls : includedClasses) {
             String fromClass = cls.getName();
 
@@ -38,7 +42,16 @@ public class RelationExtractor {
             extractDependency(config, typeConverter, typeFilter, cls, fromClass, includedNames);
         }
 
-        return relations;
+        return new HashSet<>(this.relations.values());
+    }
+
+    private void insertRelationByPriority(UmlRelation relation) {
+        String key = relation.getFromFqcn() + "|" + relation.getToFqcn();
+        UmlRelation existingRelation = relations.get(key);
+        if (existingRelation == null
+                || PRIORITY.get(relation.getType()) > PRIORITY.get(existingRelation.getType())) {
+            relations.put(key, relation);
+        }
     }
 
     private void extractDependency(
@@ -58,7 +71,7 @@ public class RelationExtractor {
                     typeConverter.getReferencedFqcnsFromType(method.getGenericReturnType());
             for (String toReferencedType : returnReferencedTypes) {
                 if (isValidRelation(fromClass, toReferencedType, includedNames, config)) {
-                    this.relations.add(
+                    insertRelationByPriority(
                             new UmlRelation(fromClass, toReferencedType, RelationType.DEPENDENCY));
                 }
             }
@@ -66,7 +79,7 @@ public class RelationExtractor {
             for (Type parameterType : method.getGenericParameterTypes()) {
                 String toReferencedType = typeConverter.convertTypeToFqcn(parameterType);
                 if (isValidRelation(fromClass, toReferencedType, includedNames, config)) {
-                    this.relations.add(
+                    insertRelationByPriority(
                             new UmlRelation(fromClass, toReferencedType, RelationType.DEPENDENCY));
                 }
             }
@@ -88,7 +101,7 @@ public class RelationExtractor {
                     typeConverter.getReferencedFqcnsFromType(field.getGenericType());
             for (String toReferencedType : referencedTypes) {
                 if (isValidRelation(fromClass, toReferencedType, includedNames, config)) {
-                    this.relations.add(
+                    insertRelationByPriority(
                             new UmlRelation(fromClass, toReferencedType, RelationType.ASSOCIATION));
                 }
             }
@@ -104,7 +117,7 @@ public class RelationExtractor {
         for (Type interfaceType : cls.getGenericInterfaces()) {
             String toInterface = typeConverter.convertTypeToFqcn(interfaceType);
             if (isValidRelation(fromClass, toInterface, includedNames, config)) {
-                this.relations.add(
+                insertRelationByPriority(
                         new UmlRelation(toInterface, fromClass, RelationType.IMPLEMENTS));
             }
         }
@@ -119,7 +132,7 @@ public class RelationExtractor {
         Type superType = cls.getGenericSuperclass();
         String toClass = typeConverter.convertTypeToFqcn(superType);
         if (isValidRelation(fromClass, toClass, includedNames, config)) {
-            this.relations.add(new UmlRelation(toClass, fromClass, RelationType.EXTENDS));
+            insertRelationByPriority(new UmlRelation(toClass, fromClass, RelationType.EXTENDS));
         }
     }
 
@@ -131,9 +144,9 @@ public class RelationExtractor {
         if (fromClass == null) {
             return false;
         }
-        if (fromClass.equals(toClass)) {
-            return false;
-        }
+        //        if (fromClass.equals(toClass)) {
+        //            return false;
+        //        }
         if (config.isFqcnIgnored(toClass)) {
             return false;
         }

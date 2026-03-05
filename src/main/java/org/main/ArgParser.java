@@ -5,10 +5,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * ArgParser Responsibilities:
- * - Take arguments/options from CLI
- * - Create a Config object with parsed info
- *
+ * ArgParser Responsibilities: - Take arguments/options from CLI - Create a Config object with
+ * parsed info
  */
 public class ArgParser {
 
@@ -25,7 +23,6 @@ public class ArgParser {
         boolean showMethods = false;
         boolean showAttributes = false;
 
-        // TODO also check for duped options
         int optionPosition = 1;
         while (optionPosition < args.length) {
 
@@ -36,8 +33,10 @@ public class ArgParser {
                 case "--ignore" -> ignoredPatterns = getIgnoreOption(optionPosition, token);
                 case "--show-package" -> showPacket = getBooleanOption(optionPosition, token);
                 case "--show-methods" -> showMethods = getBooleanOption(optionPosition, token);
-                case "--show-attributes" -> showAttributes = getBooleanOption(optionPosition, token);
-                default -> throw new IllegalArgumentException("[ERROR] Unexpected option: " + token);
+                case "--show-attributes" ->
+                        showAttributes = getBooleanOption(optionPosition, token);
+                default ->
+                        throw new IllegalArgumentException("[ERROR] Unexpected option: " + token);
             }
 
             optionPosition += 2;
@@ -48,14 +47,15 @@ public class ArgParser {
 
     private void checkForHelp() {
         String argsToStringArray = Arrays.toString(args);
-        if (args.length != 0 && (argsToStringArray.contains("--help") || argsToStringArray.contains("-h"))) {
+        if (args.length != 0
+                && (argsToStringArray.contains("--help") || argsToStringArray.contains("-h"))) {
             System.out.println(
                     """
                             ************************************************
                             [INFO] Help option detected, ignore normal flow.
-                            
+
                             Usage: java -jar ArgParser.jar <artifact path> [options]
-                            
+
                             \t<artifact path>\t\t\t\tPath to the .jar file.
                             Options:
                             \t--ignore <pattern1,pattern2,...>\tSet of classes to be ignored (ex. java.lang.*), \
@@ -64,8 +64,7 @@ public class ArgParser {
                             \t--show-methods <yes|no>\t\t\tInclude method names for classes
                             \t--show-attributes <yes|no>\t\tInclude attribute names for classes
                             \t--help|-h\t\t\t\tDisplay help information
-                            ************************************************"""
-            );
+                            ************************************************""");
             System.exit(0);
         }
     }
@@ -122,22 +121,25 @@ public class ArgParser {
         } else if (values[0].equals("no")) {
             return false;
         } else {
-            throw new IllegalArgumentException("[ERROR] Unknown value < " +
-                    values[0] + " > for option < " + token + " > (yes|no only)!");
+            throw new IllegalArgumentException(
+                    "[ERROR] Unknown value < "
+                            + values[0]
+                            + " > for option < "
+                            + token
+                            + " > (yes|no only)!");
         }
     }
 
     private void checkSeenOption(String token) {
         if (seenOptions.contains(token)) {
-            throw new IllegalArgumentException("[ERROR] Seen more than one option < " +
-                    token + " >");
+            throw new IllegalArgumentException(
+                    "[ERROR] Seen more than one option < " + token + " >");
         }
     }
 
     private void checkTokenStartsWithDDash(String token) {
         if (!token.startsWith("--")) {
-            throw new IllegalArgumentException("[ERROR] Unexpected argument < " +
-                    token + " >");
+            throw new IllegalArgumentException("[ERROR] Unexpected argument < " + token + " >");
         }
     }
 
@@ -149,16 +151,20 @@ public class ArgParser {
 
     private void checkValueDoesNotStartWithDash(String value, String token) {
         if (value.startsWith("-")) {
-            throw new IllegalArgumentException("[ERROR] invalid value < " + value +
-                    " > for option < " + token + " >!");
+            throw new IllegalArgumentException(
+                    "[ERROR] invalid value < " + value + " > for option < " + token + " >!");
         }
     }
 
     private void checkBoolOptionHasOnlyOneValue(String[] values, String token) {
         if (values.length != 1) {
-            throw new IllegalArgumentException("[ERROR] the option < " + token +
-                    " > expects only one value, < yes|no >" + " instead of < " +
-                    Arrays.toString(values) + " >!");
+            throw new IllegalArgumentException(
+                    "[ERROR] the option < "
+                            + token
+                            + " > expects only one value, < yes|no >"
+                            + " instead of < "
+                            + Arrays.toString(values)
+                            + " >!");
         }
     }
 }

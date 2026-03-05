@@ -56,11 +56,14 @@ public class UmlRelation {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || getClass() != other.getClass()) return false;
+        if (other == null || this.getClass() != other.getClass()) return false;
         UmlRelation otherRelation = (UmlRelation) other;
+        System.out.println("[DEBUG] equals UML Relation");
+        System.out.println("otherRelation " + otherRelation);
+        System.out.println("thisRelation: " + this);
         return Objects.equals(this.fromFqcn, otherRelation.getFromFqcn())
                 && Objects.equals(this.toFqcn, otherRelation.getToFqcn())
-                && this.type == otherRelation.getType()
+                && this.type.equals(otherRelation.getType())
                 && Objects.equals(this.label, otherRelation.getLabel());
     }
 

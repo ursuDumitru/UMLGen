@@ -11,11 +11,11 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        // 1. Parse CLI arguments
+        // 1. Parse arguments from CLI command
         ArgParser parser = new ArgParser();
         Config config = parser.parse(args);
 
-        // 2. Scan artifact for class names
+        // 2. Scan file for class names
         FileScanner scanner = new FileScanner();
         List<String> classNames = scanner.scan(config.getArtifactPath());
 
@@ -23,7 +23,7 @@ public class Main {
         ReflectionAnalyzer analyzer = new ReflectionAnalyzer();
         UmlModel umlModel = analyzer.analyze(classNames, config);
 
-        // 4. Convert extracted data to yUML
+        // 4. Convert extracted classes/relations to yUML
         YumlRenderer renderer = new YumlRenderer();
         List<String> yumlLines = renderer.render(umlModel, config);
 
